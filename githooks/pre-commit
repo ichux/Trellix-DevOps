@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# composer lint
+
+# Run the command to ignore the files listed
+# echo -e "oprint.txt\ndid-these.txt"" >> .git/info/exclude
+
+BRANCH_NAME=`git branch | grep \* | tr -d '* '`
+
+# clean up if found
+rm -f oprint.txt && git status
+
+# Allows us to read user input below, assigns stdin to keyboard
+exec < /dev/tty
+read -p "HAVE YOU MANUALLY COMMITTED YOUR FILES? - *carefully study the above statements*: " choice
+
+cat > oprint.txt << EOF
+$(cat did-these.txt)
+$BRANCH_NAME: $(TZ=Africa/Lagos date -u +"%Y-%m-%d %T %z")
+EOF
+
+if [[ "$choice" == [Nn]* ]]; then
+	echo "You need to manually add the necessary files"
+    exit 1
+else
+	if [[ "$choice" == [Yy]* ]]; then
+	    # Do essential git jobs
+		git config user.name "<Your name>"
+		git config user.email "<Your email>"
+	fi
+fi
+
+exit 0
