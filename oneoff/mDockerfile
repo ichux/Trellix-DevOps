@@ -1,0 +1,16 @@
+FROM python:3-slim
+
+RUN python -m venv /opt/venv && . /opt/venv/bin/activate \
+    && pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && apt update && apt install -y git build-essential \
+    && apt purge --auto-remove -y build-essential
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /src
+
+# docker build -t oneoff .
+# docker run -it --rm --name offo oneoff bash
+# docker run -it --rm --volume "$(pwd):/src" --name offo oneoff bash
+
+CMD ["/bin/bash"]
